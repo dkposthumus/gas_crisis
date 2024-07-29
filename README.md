@@ -1,7 +1,3 @@
-# OPEC Pricing Power
-This project is an attempt to replicate the methodology of Goldman Sachs's calculation of OPEC's pricing power. 
-
-## Resources on OPEC Pricing Power
-
-## Requirements
-For the packages required to run this project, see the "requirements.txt" file in the repository.
+version https://git-lfs.github.com/spec/v1
+oid sha256:f386e4300dde0bfe6813f1ef2b691c85bc8c3b6decae65ec1548425f37da2f1d
+size 284
