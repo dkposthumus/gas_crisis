@@ -15,4 +15,3 @@ umich_microdata_df = pd.read_csv(f'{raw_data}/umich_microdata.csv', header=0)
 
 
 umich_microdata_df.to_csv(f'{data}/umich_microdata.csv', index=False)
-

@@ -9,39 +9,30 @@ data = (work_dir / 'data')
 raw_data = (data / 'raw')
 code = Path.cwd() 
 
-brent_df = pd.read_csv(f'{data}/brent_price.csv')
+bloomberg_df = pd.read_csv(f'{data}/bloomberg_var.csv')
 cpi_df = pd.read_csv(f'{data}/cpi.csv') 
-sp500_df = pd.read_csv(f'{data}/sp500.csv')
-wti_df = pd.read_csv(f'{data}/wti.csv')
-_10yr_df = pd.read_csv(f'{data}/_10_yr.csv')
 umich_df = pd.read_csv(f'{data}/umich.csv')
-goldman_opec_df = pd.read_csv(f'{data}/goldman_opec.csv')
+opec_kaenzig_df = pd.read_csv(f'{data}/opec_kaenzig.csv')
 
 # now merge all data, focusing on date
-master_df = pd.merge(brent_df, cpi_df, on='date', how='outer')
-master_df = pd.merge(master_df, sp500_df, on='date', how='outer')
-master_df = pd.merge(master_df, wti_df, on='date', how='outer')
-master_df = pd.merge(master_df, _10yr_df, on='date', how='outer')
-master_df = pd.merge(master_df, umich_df, on='date', how='outer')
-master_df = pd.merge(master_df, goldman_opec_df, on='date', how='outer')
+master_df = pd.merge(bloomberg_df, cpi_df, on='date', how='outer')
+#master_df = pd.merge(master_df, umich_df, on='date', how='outer')
+master_df = pd.merge(master_df, opec_kaenzig_df, on='date', how='outer')
 
 # sort by date for readability
 master_df['date'] = pd.to_datetime(master_df['date'])
 master_df = master_df.sort_values(by='date')
 
 # now forward fill the cpi data so that it is daily 
-ffill_var = ['all-urban cpi', 'real broad dollar']
+ffill_var = ['all-urban cpi']
 for var in ffill_var:
     master_df[var] = master_df[var].fillna(
         method='ffill'
     )
 # now fill all missing observations of the production cut variable with 0, since a production cut did *not* occur there
-master_df['production cut'].fillna(0, inplace=True)
-
-# so i don't want any weekend days in my data; 
-# since all non-daily observations are front-filled, i can safely keep only non-weekend days
-# the simplest way to define this is for dates where the brent price is NOT missing
-master_df = master_df.dropna(subset=['brent price (nominal)', 's&p 500'])
+opec_var = ['meeting', 'no decision', 'production cut', 'production rise', 'production decision']
+for var in opec_var:
+    master_df[var].fillna(0, inplace=True)
 
 # export 
 master_df.to_csv(f'{data}/master.csv', index=False)

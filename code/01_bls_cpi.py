@@ -26,9 +26,9 @@ def fetch_cpi_data(start_year, end_year):
 # this is necessary because BLS's API requests are limited to 10 years each, but i want 2000-2024
 # first create empty list of all series of interest, and then append each API request onto that list
 cpi_all_series = []
-# define the data fetching process for the 3 separate intervals using function defined earlier
-for start_year in range(2000, 2024, 10):
-    end_year = min(start_year + 9, 2024)
+intervals = [(1983, 1992), (1993, 2002), (2003, 2012), (2013, 2022), (2023, 2024)]
+# Fetch the data for each interval
+for start_year, end_year in intervals:
     series_data = fetch_cpi_data(str(start_year), str(end_year))
     cpi_all_series.extend(series_data)
 
